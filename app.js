@@ -8,7 +8,8 @@
  , path = require('path')
  , io = require('socket.io')
  , mongoose = require('mongoose')
- , user = require('./controllers/user_controller');
+ , user = require('./controllers/user_controller')
+ , chat = require('./controllers/chat_controller');
 
  var app = express();
 
@@ -40,6 +41,7 @@
  	});
  	socket.on('chat', function(data){
  		socket.broadcast.emit('chat',data);
+ 		chat.insert(data);
  	});
  	socket.on('disconnect', function(data){
  		user.disconnect(io, socket, data);
