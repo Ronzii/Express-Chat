@@ -8,6 +8,30 @@ exports.insert = function(data){
 		timestamp : new Date().getTime()
 	});
 	chat.save();
-	console.log(chat);
+}
 
+exports.chatHistoryByUsername = function(username){
+	ChatModel.find({
+		username : username
+	}, function(err, res){
+		if(err){
+			return console.dir(err);
+		}
+		if(res){
+			console.log(res);
+		}
+	});
+}
+
+exports.chatHistoryByChatRoom = function(chat_room){
+	ChatModel.find({
+		chat_room : chat_room 
+	}, function(err,res){
+		if(err){
+			return console.dir(err);
+		}
+		if(res){
+			console.log(res);
+		}
+	});
 }
