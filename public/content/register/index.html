@@ -18,11 +18,19 @@
 	</div>
 	<div class="control-group">
 		<div class="controls">
-			<button type="button" class="btn">Register</button>
+			<button type="button" class="btn" id="registerUser">Register</button>
 		</div>
 	</div>
 </form>
  <script>
   $(document).ready(function(){
+  	var socket = io.connect('http://localhost:3000');
+  	$('#registerUser').click(function(){
+  		var data = {
+  			username : $('#username').val(),
+  			password : $('#password').val()
+  		};
+  		socket.emit('register', data);
+  	})
   })
 </script>

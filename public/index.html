@@ -147,57 +147,39 @@ body {
     addMessageContainer(data);
   });
    socket.on('userlist', function(list){
-    console.log(list);
+    //console.log(list);
     $('#onlineUsers').html('');
     for(var i=0;i<list.length;i++){
       $('#onlineUsers').append('<li><a href="#">' + list[i].username + '</a></li>');
     }
   });
-   function loginUser(){
-    var data = {
-      username : $('#chatUsername').val()
-    };
-    $('#chatUsername').fadeOut(function(){
-      $('#chatMessage').fadeIn();
-    });
-    $('#loginUser').fadeOut(function(){
-      $('#sendChat').fadeIn();
-    });
-    $('#usernameTopCorner').html(data.username);
-    socket.emit('login',data);
-      //$('#onlineUsers ul').append('<li><a href="#">' + data.username + '</a></li>');
-      localStorage.setItem('username',data.username);
+   function sendChat(){
+    var text = $('#chatMessage').val();
+    if(text!=''){
+      var data = {
+        username : localStorage.getItem('username'), 
+        message : text
+      };
+      addMessageContainer(data);
+      socket.emit('chat',data);
+      $('#chatMessage').val('');
     }
-    $('#loginUser').click(function(){
+  }
+  $('#chatUsername').keypress(function(e){
+    var value = $('#chatUsername').val();
+    if(e.which==13 && value!=''){
       loginUser();
-    });
-    function sendChat(){
-      var text = $('#chatMessage').val();
-      if(text!=''){
-        var data = {
-          username : localStorage.getItem('username'), 
-          message : text
-        };
-        addMessageContainer(data);
-        socket.emit('chat',data);
-        $('#chatMessage').val('');
-      }
     }
-    $('#chatUsername').keypress(function(e){
-      var value = $('#chatUsername').val();
-      if(e.which==13 && value!=''){
-        loginUser();
-      }
-    })    
-    $('#chatMessage').keypress(function(e){
-      var value = $('#chatMessage').val();
-      if(e.which==13 && value!=''){
-        sendChat();
-      }
-    })
-    $('#sendChat').click(function(){
+  })    
+  $('#chatMessage').keypress(function(e){
+    var value = $('#chatMessage').val();
+    if(e.which==13 && value!=''){
       sendChat();
-    });
+    }
   })
+  $('#sendChat').click(function(){
+    sendChat();
+  });
+})
 </script>
 </body></html>

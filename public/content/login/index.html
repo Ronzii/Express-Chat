@@ -23,16 +23,13 @@
 <script>
 $(document).ready(function(){
 	var socket = io.connect('http://localhost:3000');
-	function loginUser(){
+	$('#loginUser').click(function(){
 		var data = {
 			username : $('#inputUsername').val(),
 			password : $('#inputPassword').val()
 		};
+		console.log(data);
 		socket.emit('login',data);
-      localStorage.setItem('username',data.username);
-  }
-  $('#loginUser').click(function(){
-  	loginUser();
-  });
+	});
 })
 </script>

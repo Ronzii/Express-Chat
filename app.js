@@ -36,6 +36,9 @@
  });
 
  io.sockets.on('connection',function(socket){
+ 	socket.on('register', function(data){
+ 		user.register(io, socket, data);
+ 	})
  	socket.on('login', function(data){
  		user.login(io,socket,data);
  	});
@@ -46,11 +49,4 @@
  	socket.on('disconnect', function(data){
  		user.disconnect(io, socket, data);
  	});
- 	socket.on('historyByChatRoom', function(data){
- 		chat.chatHistoryByChatRoom(data.chat_room);
- 	})
  });
-
-
-
-
