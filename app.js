@@ -7,6 +7,7 @@
  , http = require('http')
  , path = require('path')
  , io = require('socket.io')
+ , routes = require('./routes')
  , mongoose = require('mongoose')
  , user = require('./controllers/user_controller')
  , chat = require('./controllers/chat_controller');
@@ -39,9 +40,7 @@
  server.listen(app.get('port'), function(){
  	console.log("Express server listening on port " + app.get('port'));
  });
- app.get('/', function(req, res){
-  res.render('index');
- });
+ app.get('/', routes.index);
 
  io.sockets.on('connection',function(socket){
  	socket.on('register', function(data){
