@@ -8,7 +8,7 @@ exports.insert = function(data){
 		timestamp : new Date().getTime()
 	});
 	chat.save();
-}
+};
 
 exports.historyByUsername = function(username){
 	ChatModel.find({
@@ -21,7 +21,7 @@ exports.historyByUsername = function(username){
 			console.log(res);
 		}
 	});
-}
+};
 
 exports.historyByChatRoom = function(chat_room){
 	ChatModel.find({
@@ -34,4 +34,4 @@ exports.historyByChatRoom = function(chat_room){
 			console.log(res);
 		}
 	});
-}
+};

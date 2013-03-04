@@ -8,7 +8,7 @@ $(document).ready(function(){
   }
   $('.nav li a').click(function(){
     getContentById(this.id);
-  })
+  });
   getContentById('login');
 
   var socket = io.connect('http://localhost:3000');
@@ -22,5 +22,4 @@ $(document).ready(function(){
       $('#onlineUsers').append('<li><a href="#">' + list[i].username + '</a></li>');
     }
   });
-
-})
+});
