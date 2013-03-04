@@ -42,8 +42,7 @@ body {
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon-57-precomposed.png">
-    <link rel="shortcut icon" href="http://twitter.github.com/bootstrap/assets/ico/favicon.png">
-    <script type="text/javascript" src="chrome-extension://bfbmjmiodbnnpllbbbfblcplfjjepjdn/js/injected.js"></script><style type="text/css"></style></head>
+    <link rel="shortcut icon" href="http://twitter.github.com/bootstrap/assets/ico/favicon.png"><style type="text/css"></style></head>
 
     <body>
 
@@ -61,23 +60,24 @@ body {
     						
     					</p>
     					<ul class="nav">
-    						<li class="active"><a href="#">Home</a></li>
-    						<li><a href="#about">About</a></li>
-    						<li><a href="#contact">Contact</a></li>
-    					</ul>
-    				</div><!--/.nav-collapse -->
-    			</div>
-    		</div>
-    	</div>
-
-    	<div class="container-fluid">
-    		<div class="row-fluid">
-    			<div class="span3">
-    				<div class="well sidebar-nav">
-    					<ul class="nav nav-list">
-    						<li class="nav-header">Online users</li>
+    						<li class="active"><a href="#" id="login" >Home</a></li>
+                <li><a href="#" id="register">Register</a></li>
+                <li><a href="#" id="about">About</a></li>
+                <li><a href="#" id="contact">Contact</a></li>
               </ul>
-              <ul class="nav nav-list" id="onlineUsers">
+            </div><!--/.nav-collapse -->
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid">
+        <div class="row-fluid">
+         <div class="span3">
+          <div class="well sidebar-nav">
+           <ul class="nav nav-list">
+            <li class="nav-header">Online users</li>
+          </ul>
+          <ul class="nav nav-list" id="onlineUsers">
 <!--     						<li class="active"><a href="#">Link</a></li>
     						<li><a href="#">Link</a></li>
     						<li><a href="#">Link</a></li>
@@ -86,10 +86,10 @@ body {
     				</div><!--/.well -->
     			</div><!--/span-->
     			<div class="span9">
-    				<div class="hero-unit">
-    					<div id="chatWindow">
+    				<div class="hero-unit" id="mainBody">
+
+<!--     					<div id="chatWindow">
     						<div id="messagewindow">
-    							<!-- messages -->
     						</div>
     						<div id="inputcontainer">
     							<form class="form-inline">
@@ -99,7 +99,7 @@ body {
     								<button type="button" class="btn" id="sendChat" style='display:none'>Send</button>
     							</form>
     						</div>
-    					</div>
+    					</div> -->
     				</div>
     				<div class="row-fluid">
     				</div><!--/row-->
@@ -123,35 +123,48 @@ body {
   <script src="/socket.io/socket.io.js"></script>
   <script>
   $(document).ready(function(){
-  	function addMessageContainer(data){
-  		if(data.username && data.message){
-  			$('#messagewindow').append('<p>' + data.username + ':' +data.message + '</p>');
-  		}
-  	}
-  	var socket = io.connect('http://localhost:3000');
-  	socket.on('chat', function (data) {
-  		console.log(data);
-  		addMessageContainer(data);
-  	});
-    socket.on('userlist', function(list){
-      console.log(list);
-      $('#onlineUsers').html('');
-      for(var i=0;i<list.length;i++){
-        $('#onlineUsers').append('<li><a href="#">' + list[i].username + '</a></li>');
-      }
+    // UI Logic
+    function getContentById(id){
+      var path = 'content/' + id + '/index.html';
+      $.get(path, function(data){
+        $('#mainBody').html(data);    
+      });
+    }
+    $('.nav li a').click(function(){
+      getContentById(this.id);
+    })
+    getContentById('login');
+
+    // Chat Logic
+    function addMessageContainer(data){
+      if(data.username && data.message){
+       $('#messagewindow').append('<p>' + data.username + ':' +data.message + '</p>');
+     }
+   }
+   var socket = io.connect('http://localhost:3000');
+   socket.on('chat', function (data) {
+    console.log(data);
+    addMessageContainer(data);
+  });
+   socket.on('userlist', function(list){
+    console.log(list);
+    $('#onlineUsers').html('');
+    for(var i=0;i<list.length;i++){
+      $('#onlineUsers').append('<li><a href="#">' + list[i].username + '</a></li>');
+    }
+  });
+   function loginUser(){
+    var data = {
+      username : $('#chatUsername').val()
+    };
+    $('#chatUsername').fadeOut(function(){
+      $('#chatMessage').fadeIn();
     });
-    function loginUser(){
-      var data = {
-        username : $('#chatUsername').val()
-      };
-      $('#chatUsername').fadeOut(function(){
-        $('#chatMessage').fadeIn();
-      });
-      $('#loginUser').fadeOut(function(){
-        $('#sendChat').fadeIn();
-      });
-      $('#usernameTopCorner').html(data.username);
-      socket.emit('login',data);
+    $('#loginUser').fadeOut(function(){
+      $('#sendChat').fadeIn();
+    });
+    $('#usernameTopCorner').html(data.username);
+    socket.emit('login',data);
       //$('#onlineUsers ul').append('<li><a href="#">' + data.username + '</a></li>');
       localStorage.setItem('username',data.username);
     }

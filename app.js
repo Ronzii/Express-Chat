@@ -46,7 +46,7 @@
  	socket.on('disconnect', function(data){
  		user.disconnect(io, socket, data);
  	});
- 	socket.on('chatHistoryByChatRoom', function(data){
+ 	socket.on('historyByChatRoom', function(data){
  		chat.chatHistoryByChatRoom(data.chat_room);
  	})
  });

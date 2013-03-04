@@ -10,7 +10,7 @@ exports.insert = function(data){
 	chat.save();
 }
 
-exports.chatHistoryByUsername = function(username){
+exports.historyByUsername = function(username){
 	ChatModel.find({
 		username : username
 	}, function(err, res){
@@ -23,7 +23,7 @@ exports.chatHistoryByUsername = function(username){
 	});
 }
 
-exports.chatHistoryByChatRoom = function(chat_room){
+exports.historyByChatRoom = function(chat_room){
 	ChatModel.find({
 		chat_room : chat_room 
 	}, function(err,res){
