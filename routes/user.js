@@ -2,15 +2,18 @@ var UserModel = require('../models/user_model').UserModel;
 var OnlineUserModel = require('../models/user_model').OnlineUserModel;
 
 exports.index = function(req, res){
- 	var data = {
- 		username : req.body.username,
- 		password : req.body.password
- 	};
- 	var returnStream = function(data){
- 		res.end(JSON.stringify(data));
- 	};
- 	exports.login(data,returnStream);
- 	// TODO Set Session
+	if(!req.session.username){
+		var data = {
+	 		username : req.body.username,
+	 		password : req.body.password
+	 	};
+	 	var returnStream = function(data){
+	 		req.session.username = req.body.username;
+		 	console.log(req.session.username);
+	 		res.end(JSON.stringify(data));
+	 	};
+	 	exports.login(data,returnStream);
+	 }
  };
  
 exports.login = function(data, callback){
@@ -85,7 +88,7 @@ exports.createOnlineUser = function(io, socket, data){
 	new_user.socket_id = socket.id;
 	new_user.save(function(err){
 		if(err){
-			console.log(err);
+			return console.dir(err);
 		}
 		else{
 			exports.getOnlineUsers(io,socket);
@@ -99,9 +102,12 @@ exports.getOnlineUsers = function(io, socket){
 		if (err) {
 			return console.dir('Online User List Query Failed');
 		}
-		console.log('Online Users : ', res);
+		//console.log('Online Users : ', res);
 		io.sockets.emit('userlist', res);
 	});
+};
+exports.logout = function(io, socket, data){
+	exports.disconnect(io,socket,data);
 };
 exports.disconnect = function(io, socket, data){
 	OnlineUserModel.findOne({

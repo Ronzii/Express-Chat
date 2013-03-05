@@ -1,4 +1,12 @@
 exports.index = function(req, res){
 	//console.log(req.sessionId);
-	res.render('index');
+	var username = 'Guest';
+	if(req.session.username){
+		username = req.session.username
+	}
+	res.render('index',{
+		title : 'Standalone Chat',
+		username : username,
+		session : req.session.username
+	});
 };

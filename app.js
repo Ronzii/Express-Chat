@@ -49,6 +49,12 @@
 
  app.post('/login', user.index);
 
+ app.get('/logout', function(req, res){
+ 	var username = req.session.username;
+ 	req.session.destroy();
+ 	res.end('ok');
+ });
+
  app.get('/chat/:username', chat.index);
 
  io.sockets.on('connection',function(socket){
@@ -63,6 +69,9 @@
  		//console.log(socket.handshake.sessionID);
  		socket.broadcast.emit('chat',data);
  		chat.insert(data);
+ 	});
+ 	socket.on('logout', function(data){
+ 		user.logout(io, socket, data);
  	});
  	socket.on('disconnect', function(data){
  		user.disconnect(io, socket, data);

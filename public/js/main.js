@@ -12,6 +12,14 @@ $(document).ready(function(){
   });
   getContentById('login');
 
+  $('#logout').click(function(){
+    $.ajax({
+      url : '/logout',
+      success : function(){
+        socket.emit('logout', data);
+      }
+    })
+  })
   socket = io.connect('http://localhost:3000');
   socket.on('chat', function (data) {
   	console.log(data);
