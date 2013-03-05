@@ -1,30 +1,32 @@
 var UserModel = require('../models/user_model').UserModel;
 var OnlineUserModel = require('../models/user_model').OnlineUserModel;
 
-exports.login = function(io, socket, data){
+exports.login = function(data){
 	UserModel.findOne({
 		username: data.username
 	}, function(err, res){
 		if(err){
 			return console.dir('User Find Query Failed');
 		}
+		if(!res){
+			console.log('User doesnot exist');
+		}
+	});
+};
+exports.goOnline = function(io, socket, data){
+	console.log('User already exists');
+	OnlineUserModel.findOne({
+		username : data.username
+	}, function(err, res){
+		if(err){
+			return console.dir('Problem Querying Online Users');
+		}
 		if(res){
-			console.log('User already exists');
-			OnlineUserModel.findOne({
-				username : data.username
-			}, function(err, res){
-				if(err){
-					return console.dir('Problem Querying Onlie Users');
-				}
-				if(res){
-					exports.updateSocketID(res.__id, io, socket, data);
-				}
-				else{
-					// Create User
-					exports.createOnlineUser(io,socket,data);
-				}
-			});
-			
+			exports.updateSocketID(res.__id, io, socket, data);
+		}
+		else{
+			// Create User
+			exports.createOnlineUser(io,socket,data);
 		}
 	});
 };
@@ -80,7 +82,7 @@ exports.getOnlineUsers = function(io, socket){
 		if (err) {
 			return console.dir('Online User List Query Failed');
 		}
-		//console.log('Online Users : ', res);
+		console.log('Online Users : ', res);
 		io.sockets.emit('userlist', res);
 	});
 };
@@ -91,15 +93,10 @@ exports.disconnect = function(io, socket, data){
 		if (err) {
 			return console.dir('Query Socket Failed');
 		}
-		//console.log(res);
 		if(res){
 			console.log('User Socket Found');
 			res.remove();
 			exports.getOnlineUsers(io,socket);
-		}
-		else{
-			console.log('Ghost Socket');
-			// TODO remove Ghost Socket in OnlineUserModel
 		}
 	});
 };	

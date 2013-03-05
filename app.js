@@ -42,17 +42,38 @@
  server.listen(app.get('port'), function(){
  	console.log("Express server listening on port " + app.get('port'));
  });
+
+ // TODO modify index.jade to include logged in user
+ // TODO create chat box container
  app.get('/', routes.index);
+
+ // TODO move code to routes/login.js
+ app.post('/login', function(req, res){
+ 	var data = {
+ 		username : req.body.username,
+ 		password : req.body.password
+ 	};
+ 	user.login(data);
+ 	// TODO get callback params
+ 	// TODO Set Session
+ 	res.send('ok');
+ });
+
+ app.get('/chat/:username', function(req, res){
+ 	var chat_with = req.params.username;
+ 	console.log(chat_with);
+ })
 
  io.sockets.on('connection',function(socket){
  	socket.on('register', function(data){
  		user.register(io, socket, data);
  	})
- 	socket.on('login', function(data){
- 		console.log(socket.handshake.sessionID);
- 		user.login(io,socket,data);
+ 	socket.on('online', function(data){
+ 		//console.log(socket.handshake.sessionID);
+ 		user.goOnline(io,socket,data);
  	});
  	socket.on('chat', function(data){
+ 		//console.log(socket.handshake.sessionID);
  		socket.broadcast.emit('chat',data);
  		chat.insert(data);
  	});
@@ -63,7 +84,7 @@
 
 // For chat authentication
  io.set('authorization', function (handshakeData, accept) {
- 	console.log(handshakeData);
+ 	//console.log(handshakeData);
  	if (handshakeData.headers.cookie) {
  		handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
  		handshakeData.sessionID = connect.utils.parseSignedCookie(handshakeData.cookie['express.sid'], 'secret');

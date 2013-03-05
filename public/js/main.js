@@ -1,3 +1,4 @@
+var socket;
 $(document).ready(function(){
   // UI Logic
   function getContentById(id){
@@ -11,7 +12,7 @@ $(document).ready(function(){
   });
   getContentById('login');
 
-  var socket = io.connect('http://localhost:3000');
+  socket = io.connect('http://localhost:3000');
   socket.on('chat', function (data) {
     console.log(data);
     addMessageContainer(data);
