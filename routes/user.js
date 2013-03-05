@@ -1,7 +1,19 @@
 var UserModel = require('../models/user_model').UserModel;
 var OnlineUserModel = require('../models/user_model').OnlineUserModel;
 
-exports.login = function(data){
+exports.index = function(req, res){
+ 	var data = {
+ 		username : req.body.username,
+ 		password : req.body.password
+ 	};
+ 	var returnStream = function(data){
+ 		res.end(JSON.stringify(data));
+ 	};
+ 	exports.login(data,returnStream);
+ 	// TODO Set Session
+ };
+ 
+exports.login = function(data, callback){
 	UserModel.findOne({
 		username: data.username
 	}, function(err, res){
@@ -10,6 +22,11 @@ exports.login = function(data){
 		}
 		if(!res){
 			console.log('User doesnot exist');
+			callback(null);
+		}
+		else{
+			var user = res._id;
+			callback(user);
 		}
 	});
 };

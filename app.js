@@ -11,10 +11,13 @@
  , mongoose = require('mongoose')
  , connect = require('connect')
  , cookie = require('express/node_modules/cookie')
- , user = require('./controllers/user_controller')
- , chat = require('./controllers/chat_controller');
+ , user = require('./routes/user')
+ , chat = require('./routes/chat');
 
- var app = express();
+
+ var app = express()
+ , server = http.createServer(app)
+ , io = io.listen(server);;
 
  app.configure(function(){
  	app.set('port', process.env.PORT || 3000);
@@ -34,9 +37,6 @@
  	app.use(express.errorHandler());
  });
 
- var server = http.createServer(app)
- , io = io.listen(server);
-
  mongoose.connect('localhost','samplechat');
 
  server.listen(app.get('port'), function(){
@@ -47,22 +47,9 @@
  // TODO create chat box container
  app.get('/', routes.index);
 
- // TODO move code to routes/login.js
- app.post('/login', function(req, res){
- 	var data = {
- 		username : req.body.username,
- 		password : req.body.password
- 	};
- 	user.login(data);
- 	// TODO get callback params
- 	// TODO Set Session
- 	res.send('ok');
- });
+ app.post('/login', user.index);
 
- app.get('/chat/:username', function(req, res){
- 	var chat_with = req.params.username;
- 	console.log(chat_with);
- })
+ app.get('/chat/:username', chat.index);
 
  io.sockets.on('connection',function(socket){
  	socket.on('register', function(data){
@@ -83,7 +70,7 @@
  });
 
 // For chat authentication
- io.set('authorization', function (handshakeData, accept) {
+io.set('authorization', function (handshakeData, accept) {
  	//console.log(handshakeData);
  	if (handshakeData.headers.cookie) {
  		handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);

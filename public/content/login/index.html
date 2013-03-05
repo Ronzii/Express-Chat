@@ -33,7 +33,8 @@ $(document).ready(function(){
 			url : '/login',
 			data : data,
 			success : function(exists){
-				socket.emit('online', data);
+				if(exists!='null')
+					socket.emit('online', data);
 			}
 		})
 	});

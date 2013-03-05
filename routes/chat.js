@@ -1,5 +1,10 @@
 var ChatModel = require('../models/chat_model').ChatModel;
 
+exports.index = function(req, res){
+	var chat_with = req.params.username;
+	console.log(chat_with);
+};
+
 exports.insert = function(data){
 	var chat = new ChatModel({
 		chat_room : 1,
