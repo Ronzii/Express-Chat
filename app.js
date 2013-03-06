@@ -70,11 +70,11 @@
  		socket.broadcast.emit('chat',data);
  		chat.insert(data);
  	});
- 	socket.on('logout', function(data){
- 		user.logout(io, socket, data);
+ 	socket.on('logout', function(){
+ 		user.logout(io, socket);
  	});
- 	socket.on('disconnect', function(data){
- 		user.disconnect(io, socket, data);
+ 	socket.on('disconnect', function(){
+ 		user.disconnect(io, socket);
  	});
  });
 

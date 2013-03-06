@@ -27,12 +27,15 @@ $(document).ready(function(){
 			username : $('#inputUsername').val(),
 			password : $('#inputPassword').val()
 		};
-		//console.log(data);
+		console.log(data);
 		$.ajax({
 			type : 'POST',
 			url : '/login',
 			data : data,
 			success : function(exists){
+				debugger;
+				$('#logout').val(data.username);
+				$('#logoutContainer').show();
 				if(exists!=='null'){
 					socket.emit('online', data);
 				}

@@ -31,11 +31,9 @@ html(lang='en')
             span.icon-bar
             span.icon-bar
           a.brand(href='#') #{title}
-          .nav-collapse.collapse
-            p.navbar-text.pull-right
-              - if (session)
-                  | Logged in as 
-                  a#logout.navbar-link(href='#') #{username}
+          p.navbar-text.pull-right
+            #logoutContainer
+              div.btn.btn-inverse.pull-right#logout #{username}
             ul.nav
               li.active
                 a#login(href='#') Home
@@ -53,6 +51,7 @@ html(lang='en')
           .well.sidebar-nav
             ul.nav.nav-list
               li.nav-header Online Users
+              #onlineUsers
           // /.well
         // /span
         .span9

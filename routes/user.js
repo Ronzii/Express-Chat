@@ -41,7 +41,7 @@ exports.goOnline = function(io, socket, data){
 		if(err){
 			return console.dir('Problem Querying Online Users');
 		}
-		if(res){
+		if(res && res.__id){
 			exports.updateSocketID(res.__id, io, socket, data);
 		}
 		else{
@@ -106,11 +106,10 @@ exports.getOnlineUsers = function(io, socket){
 		io.sockets.emit('userlist', res);
 	});
 };
-exports.logout = function(io, socket, data){
-	exports.disconnect(io,socket,data);
+exports.logout = function(io, socket){
+	exports.disconnect(io,socket);
 };
-// TODO 'data' is defined but never used.
-exports.disconnect = function(io, socket, data){
+exports.disconnect = function(io, socket){
 	OnlineUserModel.findOne({
 		socket_id : socket.id
 	}, function(err, res){

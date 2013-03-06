@@ -13,3 +13,6 @@ body {
             padding-right: 5px;
       }
 }
+#logoutContainer{
+	display: none;
+}

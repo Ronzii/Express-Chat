@@ -18,7 +18,9 @@ $(document).ready(function(){
             url : '/logout',
             success : function(){
                 // TODO 'data' is not defined.
-                socket.emit('logout', data);
+                $('#logoutContainer').hide();
+                $('#onlineUsers').html('');
+                socket.emit('logout');
             }
         });
     });
