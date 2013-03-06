@@ -4,18 +4,18 @@ var OnlineUserModel = require('../models/user_model').OnlineUserModel;
 exports.index = function(req, res){
 	if(!req.session.username){
 		var data = {
-	 		username : req.body.username,
-	 		password : req.body.password
-	 	};
-	 	var returnStream = function(data){
-	 		req.session.username = req.body.username;
-		 	console.log(req.session.username);
-	 		res.end(JSON.stringify(data));
-	 	};
-	 	exports.login(data,returnStream);
-	 }
- };
- 
+			username : req.body.username,
+			password : req.body.password
+		};
+		var returnStream = function(data){
+			req.session.username = req.body.username;
+			console.log(req.session.username);
+			res.end(JSON.stringify(data));
+		};
+		exports.login(data,returnStream);
+	}
+};
+
 exports.login = function(data, callback){
 	UserModel.findOne({
 		username: data.username
@@ -50,6 +50,7 @@ exports.goOnline = function(io, socket, data){
 		}
 	});
 };
+// TODO 'data' is defined but never used.
 exports.updateSocketID = function(id, io, socket, data){
 	// Update Socket ID for already logged in user
 	OnlineUserModel.update({__id: id}, { socket_id : socket.id}, function(err, res){
@@ -68,9 +69,7 @@ exports.register = function(io, socket, data){
 		if(err){
 			return console.dir('User Find Query Failed');
 		}
-		if(res){
-		}
-		else{
+		if(!res){
 			exports.createUser(data);
 		}
 	});
@@ -95,6 +94,7 @@ exports.createOnlineUser = function(io, socket, data){
 		}
 	});
 };
+// TODO 'socket' is defined but never used.
 exports.getOnlineUsers = function(io, socket){
 	var online = OnlineUserModel.find('');
 	online.select('username');
@@ -109,6 +109,7 @@ exports.getOnlineUsers = function(io, socket){
 exports.logout = function(io, socket, data){
 	exports.disconnect(io,socket,data);
 };
+// TODO 'data' is defined but never used.
 exports.disconnect = function(io, socket, data){
 	OnlineUserModel.findOne({
 		socket_id : socket.id

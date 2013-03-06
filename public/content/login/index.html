@@ -33,10 +33,11 @@ $(document).ready(function(){
 			url : '/login',
 			data : data,
 			success : function(exists){
-				if(exists!='null')
+				if(exists!=='null'){
 					socket.emit('online', data);
+				}
 			}
-		})
+		});
 	});
-})
+});
 </script>
